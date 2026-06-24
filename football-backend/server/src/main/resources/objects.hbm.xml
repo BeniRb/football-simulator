@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.football.server.entities.Team" table="teams">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="name" column="name" type="string" not-null="true"/>
+        <property name="skillLevel" column="skill_level" type="int"/>
+        <property name="points" column="points" type="int"/>
+        <property name="goalsScored" column="goals_scored" type="int"/>
+        <property name="goalsConceded" column="goals_conceded" type="int"/>
+    </class>
+
+    <class name="com.football.server.entities.GameMatch" table="game_matches">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="homeTeamId" column="home_team_id" type="long" not-null="true"/>
+        <property name="awayTeamId" column="away_team_id" type="long" not-null="true"/>
+        <property name="roundNumber" column="round_number" type="int"/>
+        <property name="homeScore" column="home_score" type="int"/>
+        <property name="awayScore" column="away_score" type="int"/>
+        <property name="isCompleted" column="is_completed" type="boolean" access="field"/>
+        <property name="weatherCondition" column="weather_condition" type="string"/>
+        <property name="keyInjuryOccurred" column="key_injury_occurred" type="boolean" access="field"/>
+        <property name="homeOdds" column="home_odds" type="double"/>
+        <property name="drawOdds" column="draw_odds" type="double"/>
+        <property name="awayOdds" column="away_odds" type="double"/>
+    </class>
+
+    <class name="com.football.server.entities.Bet" table="bets">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="token" column="user_token" type="string" not-null="true"/>
+        <property name="matchId" column="match_id" type="long" not-null="true"/>
+        <property name="userId" column="user_id" type="long" not-null="true"/>
+        <property name="prediction" column="prediction" type="string" not-null="true"/>
+        <property name="wagerAmount" column="wager_amount" type="int"/>
+        <property name="oddsAtPlacement" column="odds_at_placement" type="double"/>
+        <property name="isSettled" column="is_settled" type="boolean" access="field"/>
+        <property name="isWin" column="is_win" type="boolean" access="field"/>
+    </class>
+
+    <class name="com.football.server.entities.LeagueSettings" table="league_settings">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="currentRound" column="current_round" type="int"/>
+        <property name="bettingWindowOpen" column="betting_window_open" type="boolean"/>
+        <property name="secondsElapsedInRound" column="seconds_elapsed_in_round" type="int"/>
+    </class>
+
+    <class name="com.football.server.entities.User" table="users">
+        <id name="id" column="id" type="long">
+            <generator class="identity"/>
+        </id>
+        <property name="username" column="username" type="string" not-null="true" unique="true"/>
+        <property name="password" column="password" type="string" not-null="true"/>
+        <property name="email" column="email" type="string"/>
+        <property name="balance" column="balance" type="int" not-null="true"/>
+        <property name="lockedBalance" column="locked_balance" type="int" not-null="true"/>
+    </class>
+
+    <class name="com.football.server.entities.RefreshToken" table="refresh_token">
+        <id name="id" column="id" type="java.lang.Long">
+            <generator class="identity"/>
+        </id>
+        <property name="token" column="token" type="string" not-null="true" unique="true"/>
+        <property name="userId" column="user_id" type="long" not-null="true" unique="true"/>
+        <property name="createdAt" column="created_at" type="java.time.LocalDateTime" not-null="true"/>
+        <property name="expiresAt" column="expires_at" type="java.time.LocalDateTime" not-null="true"/>
+    </class>
+
+</hibernate-mapping>

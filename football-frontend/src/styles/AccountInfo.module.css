@@ -1,0 +1,223 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.credentialsRow {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--code-bg);
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.textAlignRight {
+    text-align: right;
+}
+
+.subLabel {
+    margin: 0 0 5px 0;
+    color: var(--text);
+    opacity: 0.8;
+    font-size: 0.85rem;
+}
+
+.strongValue {
+    font-size: 1.1rem;
+    color: var(--text-h);
+}
+
+.dashboardBox {
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.boxHeading {
+    margin: 0 0 15px 0;
+    font-size: 0.9rem;
+    color: var(--text);
+    opacity: 0.7;
+    letter-spacing: 1px;
+}
+
+.flexRowSpaceMargin {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.alignCenterMargin {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.alignCenter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.labelNormal {
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.labelSmall {
+    color: var(--text);
+    font-size: 0.85rem;
+}
+
+.valueLargeGreen {
+    margin: 5px 0 0 0;
+    color: #28a745;
+    font-size: 1.8rem;
+}
+
+.valueLargeYellow {
+    margin: 5px 0 0 0;
+    color: #ffc107;
+    font-size: 1.8rem;
+}
+
+.valueMediumYellow {
+    margin: 5px 0 0 0;
+    color: #ffc107;
+    font-size: 1.3rem;
+}
+
+.valueMedium {
+    margin: 5px 0 0 0;
+    font-size: 1.3rem;
+    color: var(--text-h);
+}
+
+.valueMediumWin {
+    color: #28a745;
+}
+
+.valueMediumLoss {
+    color: #dc3545;
+}
+
+.valueProfit {
+    margin: 5px 0 0 0;
+    color: #28a745;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.valueLoss {
+    margin: 5px 0 0 0;
+    color: #dc3545;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.textNormal {
+    margin: 3px 0 0 0;
+    color: var(--text);
+    font-size: 0.9rem;
+}
+
+.buttonRow {
+    display: flex;
+    gap: 10px;
+}
+
+.depositBtn {
+    flex: 1;
+    padding: 12px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.depositBtnActive {
+    flex: 1;
+    padding: 12px;
+    background-color: #1e7e34;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.withdrawBtn {
+    flex: 1;
+    padding: 12px;
+    background-color: var(--code-bg);
+    color: var(--text-h);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.withdrawBtnActive {
+    flex: 1;
+    padding: 12px;
+    background-color: var(--border);
+    color: var(--text-h);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.divider {
+    border-top: 1px solid var(--border);
+    margin: 15px 0;
+}
+
+.inlineForm {
+    border-top: 1px solid var(--border);
+    padding-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.formLabel {
+    font-size: 0.85rem;
+    color: var(--text);
+}
+
+.inputGroup {
+    display: flex;
+    gap: 10px;
+}
+
+.numberInput {
+    flex: 1;
+    padding: 10px;
+    background-color: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text-h);
+    font-size: 1rem;
+}
+
+.submitBtn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.errorText {
+    margin: 5px 0 0 0;
+    color: #dc3545;
+    font-size: 0.85rem;
+}

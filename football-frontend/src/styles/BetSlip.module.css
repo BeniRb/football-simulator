@@ -1,0 +1,153 @@
+.slipContainer {
+    background-color: #1a1a1a;
+    border: 1px solid #2d2d2d;
+    border-radius: 12px;
+    padding: 20px;
+    color: #ffffff;
+    width: 100%;
+    max-width: 550px;
+    box-sizing: border-box;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    
+    /* Centers the slip on full view directly under the grid */
+    margin: 10px auto 40px auto; 
+    animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.slipHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #2d2d2d;
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.slipHeader h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.clearBtn {
+    background: none;
+    border: none;
+    color: #888888;
+    font-size: 1.6rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px;
+    transition: color 0.2s ease;
+}
+
+.clearBtn:hover {
+    color: #ffffff;
+}
+
+.matchDetails {
+    background: #222222;
+    border: 1px solid #2d2d2d;
+    padding: 14px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.teamsRow {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+    color: #ffffff;
+}
+
+.selectionRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    color: #cccccc;
+}
+
+.oddsValue {
+    color: #0288d1;
+    font-weight: 700;
+    font-size: 1.15rem;
+    background: rgba(2, 136, 209, 0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.betForm .inputWrapper {
+    display: flex;
+    gap: 12px;
+}
+
+.betForm input {
+    flex: 1;
+    background: #111111;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    padding: 12px 14px;
+    color: #ffffff;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.betForm input:focus {
+    border-color: #0288d1;
+}
+
+/* Fixes webkit spin buttons styling anomalies */
+.betForm input::-webkit-outer-spin-button,
+.betForm input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.submitBetBtn {
+    background: #2e7d32;
+    color: #ffffff;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: background-color 0.2s ease;
+}
+
+.submitBetBtn:hover {
+    background: #388e3c;
+}
+
+.submitBetBtn:disabled {
+    background: #444444;
+    color: #888888;
+    cursor: not-allowed;
+}
+
+.successMsg {
+    margin-top: 14px;
+    color: #4caf50;
+    font-weight: 600;
+    text-align: center;
+    background: rgba(76, 175, 80, 0.1);
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.errorMsg {
+    margin-top: 14px;
+    color: #f44336;
+    font-weight: 600;
+    text-align: center;
+    background: rgba(244, 67, 54, 0.1);
+    padding: 10px;
+    border-radius: 6px;
+}

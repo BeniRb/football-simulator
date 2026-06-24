@@ -1,0 +1,88 @@
+.container {
+    padding: 20px;
+}
+
+.title {
+    margin: 0;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.headerRow {
+    border-bottom: 2px solid #ccc;
+    background-color: #f5f5f5;
+}
+
+.th {
+    padding: 10px;
+    text-align: center;
+}
+
+.tr {
+    border-bottom: 1px solid #eee;
+}
+
+.td {
+    padding: 10px;
+    text-align: center;
+}
+
+.teamName {
+    font-weight: bold;
+}
+
+.goalDifference {
+    direction: ltr;
+}
+
+.points {
+    font-weight: bold;
+    color: #2e7d32;
+}
+
+.loading, .error {
+    padding: 20px;
+    text-align: center;
+}
+
+.error {
+    color: red;
+}
+/* Append these to your existing src/styles/StandingsView.module.css file */
+
+.formContainer {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-start; /* Aligned for better growth as rounds increase */
+    align-items: center;
+    flex-wrap: wrap;
+    min-width: 140px;
+}
+
+.formCircle {
+    width: 22px; 
+    height: 22px;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;    /* Vertical centering */
+    justify-content: center; /* Horizontal centering */
+    line-height: 1;         /* Crucial: prevents text from pushing the circle height */
+    flex-shrink: 0;
+}
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.win { background-color: #2e7d32; }
+.draw { background-color: #757575; }
+.loss { background-color: #c62828; }
