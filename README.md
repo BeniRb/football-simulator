@@ -1,13 +1,10 @@
 ### 📊 Project Architecture & Interactivity Graph
 
 ```mermaid
-graph LR
-    %% Set layout direction from Left to Right
-    
+graph TD
     %% Package Layer Groups
     subgraph Security ["🔐 Security Layer"]
-        JwtConfig[JwtConfig.java]
-        JwtService[JwtService.java]
+        JwtConfig[JwtConfig.java] --> JwtService[JwtService.java]
     end
 
     subgraph Auth ["⚙️ Core Authentication Services"]
@@ -41,44 +38,42 @@ graph LR
         ProfileService[ProfileService.java]
         CookieUtils[CookieUtils.java]
         Constants[Constants.java]
-        Errors[Errors.java]
         GenerateHash[GenerateHash.java]
     end
 
     subgraph DTOs ["📦 Response DTO Hierarchy"]
-        BasicResp[BasicResponse.java]
         LoginResp[LoginResponse.java]
         ProfileResp[ProfileResponse.java]
         BettingResp[BettingResponse.java]
         LeagueResp[LeagueResponse.java]
         MatchSimResp[MatchSimulationResponse.java]
         OddsResp[OddsResponse.java]
+        BasicResp[BasicResponse.java]
     end
 
-    %% Enforce linear subgraph placement to stop messy overlapping
-    Security --> Auth --> Sportsbook --> Storage --> Infrastructure
-
-    %% Structural Interactions & Dependencies
-    JwtConfig --> JwtService
-    JwtService --> Constants
+    %% Clean Core Flows (Security to Auth)
+    JwtService -.-> TokenService
     AuthService --> GenerateHash
     AuthService --> UserService
     AuthService --> TokenService
     TokenService --> RefreshRepo
     TokenService --> AuthRepo
-    TokenService --> JwtService
     TokenService --> E_Token
     TokenService --> E_User
     UserService --> AuthRepo
-    UserService --> E_User
 
+    %% Clean Core Flows (Auth to Sportsbook & Profile)
+    ProfileService --> AuthRepo
+    ProfileService --> BettingService
+    ProfileService --> E_User
+    ProfileService --> E_Bet
+
+    %% Sportsbook Internal Dependencies
     BettingService --> Persist
-    BettingService --> JwtService
     BettingService --> E_User
     BettingService --> E_Bet
     BettingService --> E_Match
-    BettingService --> E_Settings
-
+    
     MatchSim --> Persist
     MatchSim --> BettingService
     MatchSim --> OddsService
@@ -91,26 +86,14 @@ graph LR
     OddsService --> E_Match
 
     LeagueService --> Persist
-    LeagueService --> E_Match
-    LeagueService --> E_Team
-    LeagueService --> E_Settings
-
     LeagueInit --> Persist
-    LeagueInit --> E_Team
-    LeagueInit --> E_Match
-    LeagueInit --> E_Settings
 
+    %% Persistence Map
     Persist & AuthRepo & RefreshRepo --> HbmXml
     E_User & E_Bet & E_Match & E_Team & E_Settings & E_Token --> HbmXml
-
-    ProfileService --> AuthRepo
-    ProfileService --> BettingService
-    ProfileService --> E_User
-    ProfileService --> E_Bet
-
     CookieUtils --> Constants
-    Errors --> AuthService & BettingService & LeagueService & MatchSim & OddsService
 
+    %% Clean Response Tree
     LoginResp & ProfileResp & BettingResp & LeagueResp & MatchSimResp & OddsResp --> BasicResp
 
     %% Click Interactions
@@ -138,4 +121,4 @@ graph LR
 
     %% Styling Theme
     classDef components fill:#2d3139,stroke:#5c6370,stroke-width:1px,color:#abb2bf;
-    class JwtConfig,JwtService,AuthService,UserService,TokenService,BettingService,MatchSim,OddsService,LeagueService,LeagueInit,ProfileService,Persist,E_User,E_Bet,E_Match,E_Team,E_Settings,E_Token,HbmXml,AuthRepo,RefreshRepo,Constants,CookieUtils,Errors,GenerateHash,BasicResp,LoginResp,ProfileResp,BettingResp,LeagueResp,MatchSimResp,OddsResp components;
+    class JwtConfig,JwtService,AuthService,UserService,TokenService,BettingService,MatchSim,OddsService,LeagueService,LeagueInit,ProfileService,Persist,E_User,E_Bet,E_Match,E_Team,E_Settings,E_Token,HbmXml,AuthRepo,RefreshRepo,Constants,CookieUtils,GenerateHash,BasicResp,LoginResp,ProfileResp,BettingResp,LeagueResp,MatchSimResp,OddsResp components;
