@@ -1,26 +1,31 @@
-# ⚽ Virtual Football Sportsbook & Match Simulator
+# ⚽ foot-ball simulator
 
-Automated full-stack football betting platform built with a Java Spring Boot backend engine and a dynamic React frontend. The application features real-time background match simulation, dynamic oddsmaking algorithms, and secure JWT token session validation.
+Automated full-stack football betting platform and match simulation engine built with a Java Spring Boot backend and a dynamic React frontend.
 
 ---
 
 ## 📂 Project Repository Structure
 
-This project is organized as a monorepo, keeping both the frontend client and the backend server code synchronized inside a single repository:
+This project is organized as a monorepo to keep both the frontend client and the backend server code synchronized inside a single repository:
 
 ```text
-football-project/
+foot-ball simulator/
 │
 ├── football-backend/      <-- Spring Boot Application Core
 │   ├── src/main/java/     <-- Java Package Layer Blueprints
 │   ├── src/main/resources/<-- Application Properties & Hibernate XML
 │   └── pom.xml            <-- Maven Dependency Management
 │
-├── frontend/              <-- React User Interface (Vite / CRA)
+├── football-frontend/     <-- React User Interface
 │   ├── src/               <-- UI Components, Hooks, & Styling
 │   └── package.json       <-- Node Dependency Scripts
 │
 └── README.md              <-- System Overview Index
+
+📊 Project Architecture & Interactivity Graph
+
+The following diagram maps out how the backend packages interact. This graph is interactive: hovering over or clicking on any component node will jump you directly to its source file in the repository.
+Code snippet
 
 graph TD
     %% --- LAYER DIRECTORIES ---
@@ -38,12 +43,12 @@ graph TD
     LeagueService[LeagueService.java]
     LeagueInit[LeagueInitializerService.java]
 
-    Store_Title[🗄️ DATABASE ENTITIES] === E_User(User)
-    E_Bet(Bet)
-    E_Match(GameMatch)
-    E_Team(Team)
-    E_Settings(LeagueSettings)
-    E_Token(RefreshToken)
+    Store_Title[🗄️ DATABASE ENTITIES] === E_User[User.java]
+    E_Bet[Bet.java]
+    E_Match[GameMatch.java]
+    E_Team[Team.java]
+    E_Settings[LeagueSettings.java]
+    E_Token[RefreshToken.java]
 
     Infra_Title[💾 PERSISTENCE & INFRASTRUCTURE] === Persist[Persist.java]
     AuthRepo[AuthRepository]
