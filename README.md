@@ -113,6 +113,13 @@ graph TD
 
     CookieUtils --> Constants
 
+    %% Errors Layer Target Route
+    Errors --> AuthService
+    Errors --> BettingService
+    Errors --> LeagueService
+    Errors --> MatchSim
+    Errors --> OddsService
+
     LoginResp --> BasicResp
     ProfileResp --> BasicResp
     BettingResp --> BasicResp
