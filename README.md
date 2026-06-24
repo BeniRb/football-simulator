@@ -1,7 +1,9 @@
 ### 📊 Project Architecture & Interactivity Graph
 
 ```mermaid
-graph TD
+graph LR
+    %% Set layout direction from Left to Right
+    
     %% Package Layer Groups
     subgraph Security ["🔐 Security Layer"]
         JwtConfig[JwtConfig.java]
@@ -52,6 +54,9 @@ graph TD
         MatchSimResp[MatchSimulationResponse.java]
         OddsResp[OddsResponse.java]
     end
+
+    %% Enforce linear subgraph placement to stop messy overlapping
+    Security --> Auth --> Sportsbook --> Storage --> Infrastructure
 
     %% Structural Interactions & Dependencies
     JwtConfig --> JwtService
@@ -108,7 +113,7 @@ graph TD
 
     LoginResp & ProfileResp & BettingResp & LeagueResp & MatchSimResp & OddsResp --> BasicResp
 
-    %% Click Interactions (Points to files inside your new /backend/ folder structure)
+    %% Click Interactions
     click JwtConfig "./backend/src/com/football/server/security/JwtConfig.java" "Go to JwtConfig"
     click JwtService "./backend/src/com/football/server/security/JwtService.java" "Go to JwtService"
     click AuthService "./backend/src/com/football/server/service/AuthService.java" "Go to AuthService"
