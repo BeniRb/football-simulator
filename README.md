@@ -2,117 +2,136 @@
 
 
 
-Mathematical Model & Simulation Algorithm
+## Mathematical Model & Simulation Algorithm
 
 The Football Simulator uses a probabilistic football model based on team skill ratings, environmental modifiers, and Poisson-distributed goal generation.
 
-Odds Calculation
+### Odds Calculation
 
-Before each round, the system calculates the probability of a Home Win, Draw, and Away Win using the skill difference between the two teams:
+Before each round, the system calculates the probability of a Home Win, Draw, and Away Win using the skill difference between the two teams.
 
-[
+```text
 D = HomeSkill - AwaySkill
-]
 
-[
-P(Home) = 0.45 + 0.007D
-]
+P(Home) = 0.45 + 0.007 × D
 
-[
-P(Away) = 0.30 - 0.007D
-]
+P(Away) = 0.30 - 0.007 × D
 
-[
-P(Draw) = 0.25 - 0.002|D|
-]
+P(Draw) = 0.25 - 0.002 × |D|
+```
 
 The probabilities are then converted into decimal betting odds using a bookmaker margin:
 
-[
-Odds = \frac{1.10}{Probability}
-]
+```text
+Odds = 1.10 / Probability
+```
 
 This creates realistic sportsbook-style odds while maintaining a house edge.
 
-Match Simulation
+### Match Simulation
 
-For each team, the simulator calculates an expected goals value ((\lambda)):
+For each team, the simulator calculates an expected goals value (λ):
 
-[
-\lambda = 1.5 + 0.2(Sa-Sd) + H + W + I
-]
+```text
+λ = 1.5 + 0.2 × (AttackerSkill - DefenderSkill)
+    + HomeAdvantage
+    + WeatherModifier
+    + InjuryModifier
+```
 
 Where:
 
-(Sa) = attacking team's skill.
-(Sd) = defending team's skill.
-(H) = home advantage bonus.
-(W) = weather modifier.
-(I) = injury modifier.
+| Variable        | Description                       |
+| --------------- | --------------------------------- |
+| AttackerSkill   | Skill level of the attacking team |
+| DefenderSkill   | Skill level of the defending team |
+| HomeAdvantage   | +0.3 for the home team            |
+| WeatherModifier | 0, -0.2, or -0.4                  |
+| InjuryModifier  | 0 or -0.4                         |
 
-Weather and injury events are generated randomly before the match begins:
+Random events generated before each match:
 
-Sunny: 70%
-Rainy: 20%
-Stormy: 10%
-Injury event: 15%
-Poisson Goal Generation
+| Event        | Probability |
+| ------------ | ----------- |
+| Sunny        | 70%         |
+| Rainy        | 20%         |
+| Stormy       | 10%         |
+| Injury Event | 15%         |
 
-Once (\lambda) is calculated, the simulator uses the Poisson distribution:
+### Poisson Goal Generation
 
-[
-P(X=k)=\frac{e^{-\lambda}\lambda^k}{k!}
-]
+Once λ is calculated, the simulator uses the Poisson distribution:
 
-to model the probability of scoring exactly (k) goals.
+```text
+P(X = k) = (e^-λ × λ^k) / k!
+```
 
-The system then applies Knuth's Poisson Random Sampling Algorithm to generate an actual goal count from the distribution. This process is executed independently for both teams.
+Where:
 
-Winner Determination
+* X = number of goals
+* k = exact goal count
+* λ = expected goals
 
-The final score is produced by the Poisson simulation:
+The system then applies **Knuth's Poisson Random Sampling Algorithm** to generate an actual goal count from the distribution.
 
-Home Goals = Poisson(λ_home)
-Away Goals = Poisson(λ_away)
+This process is executed independently for both teams.
 
-The match outcome is then determined by comparing the generated scores:
+### Winner Determination
 
-Home Goals > Away Goals → HOME_WIN
-Away Goals > Home Goals → AWAY_WIN
-Home Goals = Away Goals → DRAW
-Bet Settlement
+The final score is generated using Poisson sampling:
 
-When a user places a bet, the wager is locked until the match is completed. Winning payouts are calculated using the odds recorded at placement time:
+```text
+HomeGoals = Poisson(λ_home)
 
-[
-Payout = Wager \times Odds_{placement}
-]
+AwayGoals = Poisson(λ_away)
+```
 
-[
+The winner is determined by comparing the generated scores:
+
+```text
+HomeGoals > AwayGoals  → HOME_WIN
+
+AwayGoals > HomeGoals  → AWAY_WIN
+
+HomeGoals = AwayGoals  → DRAW
+```
+
+### Bet Settlement
+
+When a user places a bet, the wager is locked until the match is completed.
+
+Winning payouts are calculated using the odds stored when the bet was placed:
+
+```text
+Payout = Wager × OddsAtPlacement
+
 Profit = Payout - Wager
-]
+```
 
 This ensures that odds changes after bet placement do not affect previously accepted wagers.
 
-Simulation Flow
+### Simulation Flow
+
+```text
 Team Skills
-     ↓
+      ↓
 Probability Calculation
-     ↓
+      ↓
 Odds Generation
-     ↓
+      ↓
 Weather & Injury Events
-     ↓
+      ↓
 Expected Goals (λ)
-     ↓
+      ↓
 Poisson Distribution
-     ↓
+      ↓
 Knuth Poisson Sampling
-     ↓
+      ↓
 Generated Score
-     ↓
+      ↓
 Match Result
-     ↓
+      ↓
 Bet Settlement
+```
 
 This combination of probability theory, Poisson distributions, random sampling, and sportsbook mathematics creates a realistic football simulation and betting environment.
