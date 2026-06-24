@@ -1,17 +1,4 @@
 ### 📊 Project Architecture & Interactivity Graph
-foot-ball simulator/
-│
-├── football-backend/      <-- Spring Boot Application Core
-│   ├── src/main/java/     <-- Java Package Layer Blueprints
-│   ├── src/main/resources/<-- Application Properties & Hibernate XML
-│   └── pom.xml            <-- Maven Dependency Management
-│
-├── football-frontend/     <-- React User Interface
-│   ├── src/               <-- UI Components, Hooks, & Styling
-│   └── package.json       <-- Node Dependency Scripts
-│
-└── README.md              <-- System Overview Index
-
 ```mermaid
 graph TD
     %% Package Layer Groups
@@ -65,12 +52,13 @@ graph TD
         OddsResp[OddsResponse.java]
     end
 
-    %% Structural Interactions & Dependencies
+    %% Structural Interactions
     JwtConfig --> JwtService
     JwtService --> Constants
     AuthService --> GenerateHash
     AuthService --> UserService
     AuthService --> TokenService
+    
     TokenService --> RefreshRepo
     TokenService --> AuthRepo
     TokenService --> JwtService
@@ -107,8 +95,16 @@ graph TD
     LeagueInit --> E_Match
     LeagueInit --> E_Settings
 
-    Persist & AuthRepo & RefreshRepo --> HbmXml
-    E_User & E_Bet & E_Match & E_Team & E_Settings & E_Token --> HbmXml
+    Persist --> HbmXml
+    AuthRepo --> HbmXml
+    RefreshRepo --> HbmXml
+    
+    E_User --> HbmXml
+    E_Bet --> HbmXml
+    E_Match --> HbmXml
+    E_Team --> HbmXml
+    E_Settings --> HbmXml
+    E_Token --> HbmXml
 
     ProfileService --> AuthRepo
     ProfileService --> BettingService
@@ -116,11 +112,15 @@ graph TD
     ProfileService --> E_Bet
 
     CookieUtils --> Constants
-    Errors --> AuthService & BettingService & LeagueService & MatchSim & OddsService
 
-    LoginResp & ProfileResp & BettingResp & LeagueResp & MatchSimResp & OddsResp --> BasicResp
+    LoginResp --> BasicResp
+    ProfileResp --> BasicResp
+    BettingResp --> BasicResp
+    LeagueResp --> BasicResp
+    MatchSimResp --> BasicResp
+    OddsResp --> BasicResp
 
-    %% Click Interactions (Points to files inside your new /football-backend/ folder structure)
+    %% Click Interactions
     click JwtConfig "./football-backend/src/main/java/com/football/server/security/JwtConfig.java" "Go to JwtConfig"
     click JwtService "./football-backend/src/main/java/com/football/server/security/JwtService.java" "Go to JwtService"
     click AuthService "./football-backend/src/main/java/com/football/server/service/AuthService.java" "Go to AuthService"
