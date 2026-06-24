@@ -44,11 +44,11 @@ For each team, the simulator calculates an expected goals value ((\lambda)):
 
 Where:
 
-(Sa) = attacking team's skill
-(Sd) = defending team's skill
-(H) = home advantage bonus
-(W) = weather modifier
-(I) = injury modifier
+(Sa) = attacking team's skill.
+(Sd) = defending team's skill.
+(H) = home advantage bonus.
+(W) = weather modifier.
+(I) = injury modifier.
 
 Weather and injury events are generated randomly before the match begins:
 
