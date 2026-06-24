@@ -4,15 +4,17 @@
     margin: 0 auto;
     padding: 24px 16px;
     box-sizing: border-box;
+    color: var(--text);
 }
 
 .dashboardHeader {
-    color: #ffffff;
+    color: var(--text-h);
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 24px;
-    border-bottom: 2px solid #252525;
+    border-bottom: 2px solid var(--border);
     padding-bottom: 12px;
+    text-align: center;
 }
 
 .closedBanner {
@@ -28,13 +30,11 @@
 
 .oddsGrid {
     display: grid;
-    /* Forces a perfectly balanced 2-column grid on desktop screens */
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
     margin-bottom: 32px;
 }
 
-/* Keeps it responsive so it stacks into 1 single column on small mobile screens */
 @media (max-width: 768px) {
     .oddsGrid {
         grid-template-columns: 1fr;
@@ -42,8 +42,8 @@
 }
 
 .oddsCard {
-    background-color: #1a1a1a;
-    border: 1px solid #2d2d2d;
+    background-color: var(--bg);
+    border: 1px solid var(--border);
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -51,16 +51,16 @@
     justify-content: space-between;
     gap: 16px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    transition: border-color 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
 }
 
 .oddsCard:hover {
-    border-color: #444444;
+    border-color: var(--accent-border);
     transform: translateY(-2px);
 }
 
 .matchTeams {
-    color: #ffffff;
+    color: var(--text-h);
     font-size: 1.15rem;
     font-weight: 600;
     text-align: center;
@@ -109,7 +109,6 @@
     opacity: 0.3;
 }
 
-/* Button Text Styling to cleanly display strings and rates */
 .btnLabel {
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -124,7 +123,6 @@
     font-weight: 700;
 }
 
-/* Base Team Colors */
 .home {
     background-color: #0288d1;
 }
@@ -137,16 +135,26 @@
     background-color: #d32f2f;
 }
 
-/* Highlight Active selection states clearly */
 .oddBtn.active {
-    outline: 3px solid #ffffff !important;
+    outline: 3px solid var(--text-h) !important;
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
 }
 
-.noMatchesMessage, .loadingText {
-    color: #aaaaaa;
+.noMatchesMessage,
+.loadingText {
+    color: var(--text);
     text-align: center;
     font-size: 1.2rem;
     padding: 40px;
     grid-column: 1 / -1;
+}
+.timerBox {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    color: var(--text-h);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
 }

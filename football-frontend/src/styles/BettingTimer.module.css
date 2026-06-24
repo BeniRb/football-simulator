@@ -1,0 +1,10 @@
+.timerBox {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    color: var(--text-h);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}

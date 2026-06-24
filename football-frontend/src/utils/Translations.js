@@ -3,7 +3,7 @@ export const translations = {
         // App Nav Bar
         home: "Home",
         standings: "Standings",
-        liveDashboard: "Live Dashboard",
+        liveDashboard: "Live Dashboard & Betting",
         logout: "Logout",
         // Profile Nav Bar
         accountInfo: "Account Info",
@@ -63,7 +63,7 @@ export const translations = {
         noMatchesAvailable: "No matches available for this round.",
         matchFinished: "FINISHED",
         matchUpcoming: "UPCOMING",
-        activityLogTitle: "League Activity Log",
+        activityLogTitle: "Upcoming Matches",
         loadingActivity: "Loading league history...",
         noActivity: "No events logged yet.",
         teamMovedUp: "climbed to rank",
@@ -109,7 +109,7 @@ export const translations = {
         // App Nav Bar
         home: "בית",
         standings: "טבלאות ליגה",
-        liveDashboard: "לוח תוצאות חי",
+        liveDashboard: "לוח תוצאות חי & הימורים",
         logout: "התנתקות",
         // Live Dashboard specific keys
         dashboardTitle: "לוח משחקים חי",
@@ -171,7 +171,7 @@ export const translations = {
         noMatchesAvailable: "אין משחקים זמינים במחזור זה",
         matchFinished: "סיום",
         matchUpcoming: "טרם החל",
-        activityLogTitle: "יומן פעילות הליגה",
+        activityLogTitle: "משחקים הבאים",
         loadingActivity: "טוען היסטוריית פעילות...",
         noActivity: "אין אירועים מתועדים עדיין.",
         teamMovedUp: "עלתה למקום ה",

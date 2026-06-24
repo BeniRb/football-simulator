@@ -3,7 +3,6 @@ import api from '../api/client';
 import BetsHistory from '../components/BetsHistory';
 import AccountInfo from '../components/AccountInfo';
 import Settings from '../components/Settings';
-import StandingsView from '../components/StandingsView';
 import { translations } from '../utils/Translations';
 import styles from '../styles/Profile.module.css';
 
@@ -12,36 +11,48 @@ export default function Profile({ globalLang, setGlobalLang }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [activeTab, setActiveTab] = useState('info');
-    
-    // Parse the translations directly using global parent props configuration
+
     const t = translations[globalLang];
 
-    // Wallet Action States
     const [actionType, setActionType] = useState(null);
     const [walletAmount, setWalletAmount] = useState('');
     const [walletError, setWalletError] = useState('');
 
-    useEffect(() => {
-        const fetchProfileData = async () => {
-            try {
-                const response = await api.get('/user/profile');
-                if (response.data && response.data.success) {
-                    setProfile(response.data);
-                } else {
-                    setError(response.data?.message || 'Failed to load profile details.');
-                }
-            } catch (err) {
-                setError('Unauthorized or network error. Please log in again.');
-            } finally {
-                setLoading(false);
+    const fetchProfileData = async (showLoading = false) => {
+        try {
+            if (showLoading) {
+                setLoading(true);
             }
-        };
-        fetchProfileData();
+
+            const response = await api.get('/user/profile');
+
+            if (response.data && response.data.success) {
+                setProfile(response.data);
+                setError('');
+            } else {
+                setError(response.data?.message || 'Failed to load profile details.');
+            }
+        } catch (err) {
+            setError('Unauthorized or network error. Please log in again.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchProfileData(true);
+
+        const intervalId = setInterval(() => {
+            fetchProfileData(false);
+        }, 3000);
+
+        return () => clearInterval(intervalId);
     }, []);
 
     const handleWalletAction = async (e) => {
         e.preventDefault();
         setWalletError('');
+
         const amt = parseInt(walletAmount, 10);
         const currentBalance = profile?.balance || 0;
 
@@ -49,6 +60,7 @@ export default function Profile({ globalLang, setGlobalLang }) {
             setWalletError('Please enter a valid whole number amount.');
             return;
         }
+
         if (actionType === 'withdraw' && amt > currentBalance) {
             setWalletError('Insufficient available funds for this withdrawal.');
             return;
@@ -56,10 +68,12 @@ export default function Profile({ globalLang, setGlobalLang }) {
 
         try {
             const response = await api.post(`/user/wallet/${actionType}?amount=${amt}`);
+
             if (response.data && response.data.success) {
                 setProfile(response.data);
                 setActionType(null);
                 setWalletAmount('');
+                fetchProfileData(false);
             } else {
                 setWalletError(response.data?.username === "INSUFFICIENT_FUNDS" ? 'Insufficient funds.' : 'Action failed.');
             }
@@ -80,7 +94,7 @@ export default function Profile({ globalLang, setGlobalLang }) {
         switch (activeTab) {
             case 'info':
                 return (
-                    <AccountInfo 
+                    <AccountInfo
                         profile={profile}
                         actionType={actionType}
                         setActionType={setActionType}
@@ -92,10 +106,13 @@ export default function Profile({ globalLang, setGlobalLang }) {
                         t={t}
                     />
                 );
+
             case 'bets':
                 return <BetsHistory bets={profile?.bets || []} t={t} />;
+
             case 'settings':
                 return <Settings currentLang={globalLang} changeLang={setGlobalLang} />;
+
             default:
                 return null;
         }
@@ -103,21 +120,22 @@ export default function Profile({ globalLang, setGlobalLang }) {
 
     return (
         <div className={styles.profileContainer}>
-            {/* Sub-navigation bar */}
             <div className={styles.subNavBar}>
-                <button 
+                <button
                     onClick={() => setActiveTab('info')}
                     className={activeTab === 'info' ? styles.navButtonActive : styles.navButton}
                 >
                     {t.accountInfo}
                 </button>
-                <button 
+
+                <button
                     onClick={() => setActiveTab('bets')}
                     className={activeTab === 'bets' ? styles.navButtonActive : styles.navButton}
                 >
                     {t.betsHistory}
                 </button>
-                <button 
+
+                <button
                     onClick={() => setActiveTab('settings')}
                     className={activeTab === 'settings' ? styles.navButtonActive : styles.navButton}
                 >
@@ -125,7 +143,6 @@ export default function Profile({ globalLang, setGlobalLang }) {
                 </button>
             </div>
 
-            {/* Dynamic Content Pane */}
             <div className={styles.contentPane}>
                 {renderTabContent()}
             </div>

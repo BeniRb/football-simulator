@@ -1,16 +1,17 @@
 .logContainer {
     padding: 20px;
-    background-color: #1e1e1e;
+    background-color: var(--bg);
+    border: 1px solid var(--border);
     border-radius: 8px;
     margin-top: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.15);
     font-family: sans-serif;
 }
 
 .logTitle {
-    color: #fff;
+    color: var(--text-h);
     margin-bottom: 15px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--border);
     padding-bottom: 5px;
 }
 
@@ -23,15 +24,16 @@
 }
 
 .emptyText {
-    color: #888;
+    color: var(--text);
     text-align: center;
 }
 
 .logRow {
     padding: 10px 12px;
-    background-color: #222;
+    background-color: var(--code-bg);
+    border: 1px solid var(--border);
     border-radius: 4px;
-    color: #e0e0e0;
+    color: var(--text-h);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -45,6 +47,7 @@
 
 .statusBadge {
     color: #fff;
+    background-color: #28a745;
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 0.7rem;
@@ -55,6 +58,6 @@
 
 .loadingText {
     padding: 10px;
-    color: #aaa;
+    color: var(--text);
     text-align: center;
 }

@@ -243,3 +243,62 @@
   border-radius: 4px;
   font-weight: 500;
 }
+body[data-theme="DARK"] {
+  --bg: #111827;
+  --code-bg: #1f2937;
+  --border: #374151;
+  --text: #d1d5db;
+  --text-h: #ffffff;
+}
+
+body[data-theme="LIGHT"] {
+  --bg: #ffffff;
+  --code-bg: #f3f4f6;
+  --border: #d1d5db;
+  --text: #374151;
+  --text-h: #111827;
+}
+
+/* Global page background/text */
+body[data-theme="DARK"],
+body[data-theme="DARK"] .app-container {
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+body[data-theme="LIGHT"],
+body[data-theme="LIGHT"] .app-container {
+  background: #f8fafc;
+  color: #111827;
+}
+
+/* Navbar theme */
+body[data-theme="DARK"] .nav-bar {
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+body[data-theme="LIGHT"] .nav-bar {
+  background: #ffffff;
+  border-bottom: 1px solid #d1d5db;
+}
+
+/* Navbar links */
+body[data-theme="DARK"] .nav-link,
+body[data-theme="DARK"] .nav-link-bold {
+  color: #ffffff;
+}
+
+body[data-theme="LIGHT"] .nav-link,
+body[data-theme="LIGHT"] .nav-link-bold {
+  color: #111827;
+}
+
+/* Profile icon */
+body[data-theme="LIGHT"] .profile-icon {
+  color: #111827;
+}
+
+body[data-theme="DARK"] .profile-icon {
+  color: #ffffff;
+}

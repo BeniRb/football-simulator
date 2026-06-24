@@ -5,6 +5,7 @@ import com.football.server.entities.LeagueSettings;
 import com.football.server.entities.Team;
 import com.football.server.responses.LeagueResponse;
 import com.football.server.service.LeagueService;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,6 +45,7 @@ public class LeagueController {
         return leagueService.getCurrentRound(); // Add this method to your service
     }
     @GetMapping("/settings")
+    @Transactional(readOnly = true)
     public LeagueResponse<?> getLeagueSettings() {
         try {
             LeagueSettings settings = (LeagueSettings) persist.getQuerySession()

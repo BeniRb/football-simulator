@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import api from '../api/client';
 import { translations } from '../utils/Translations';
 import styles from '../styles/MatchLog.module.css';
@@ -6,89 +6,200 @@ import styles from '../styles/MatchLog.module.css';
 export default function MatchLog({ language }) {
     const [logItems, setLogItems] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showCompletedStories, setShowCompletedStories] = useState(false);
+
+    const lastShownCompletedIds = useRef(new Set());
+    const completedTimerRef = useRef(null);
+    const initializedRef = useRef(false);
+    const showCompletedStoriesRef = useRef(false);
 
     const activeLang = language === 'HE' ? 'HE' : 'EN';
     const t = translations[activeLang];
     const isRtl = activeLang === 'HE';
 
     useEffect(() => {
+        const isMatchCompleted = (match) => {
+            return (
+                match.isCompleted === true ||
+                match.completed === true ||
+                match.status === 'COMPLETED'
+            );
+        };
+
         const compileActivityLog = async () => {
             try {
-                const [standingsRes, fixturesRes] = await Promise.all([
+                const [standingsRes, fixturesRes, historyRes] = await Promise.all([
                     api.get('/league/standings'),
-                    api.get('/league/fixtures')
+                    api.get('/league/fixtures'),
+                    api.get('/league/history')
                 ]);
 
-                if (!standingsRes.data?.success || !fixturesRes.data?.success) return;
+                if (
+                    !standingsRes.data?.success ||
+                    !fixturesRes.data?.success ||
+                    !historyRes.data?.success
+                ) {
+                    return;
+                }
 
                 const teams = standingsRes.data.data || [];
-                const matches = fixturesRes.data.data || [];
+                const upcomingMatches = fixturesRes.data.data || [];
+                const completedMatches = historyRes.data.data || [];
 
                 const teamsMap = {};
                 teams.forEach((team, index) => {
-                    teamsMap[team.id] = {
+                    const teamKey = String(team.id || team._id);
+                    teamsMap[teamKey] = {
                         name: team.name,
                         rank: index + 1
                     };
                 });
 
                 const temporaryLog = [];
+                const localTranslations = translations[activeLang];
+                const getTeamName = (rawName) => localTranslations.teams?.[rawName] || rawName;
 
-                // Helper to safely fetch translated team names from translation object mapping
-                const getTeamName = (rawName) => t.teams?.[rawName] || rawName;
+                const completed = completedMatches.filter(isMatchCompleted);
+                const upcoming = upcomingMatches.filter(match => !isMatchCompleted(match));
 
-                // 1. Process Completed Matches into Single-Row Stories
-                const completed = matches.filter(m => m.isCompleted);
-                completed.forEach(match => {
-                    const home = teamsMap[match.homeTeamId] || { name: `Team ${match.homeTeamId}`, rank: '-' };
-                    const away = teamsMap[match.awayTeamId] || { name: `Team ${match.awayTeamId}`, rank: '-' };
+                const newestCompleted = completed
+                    .slice()
+                    .sort((a, b) => Number(b.id) - Number(a.id))
+                    .slice(0, 4);
 
-                    const homeName = getTeamName(home.name);
-                    const awayName = getTeamName(away.name);
+                const newestCompletedKey = newestCompleted
+                    .map(match => String(match.id))
+                    .join('-');
 
-                    if (match.homeScore > match.awayScore) {
-                        // Home Win Story (e.g., 2 - 1)
-                        const scoreText = `${match.homeScore} - ${match.awayScore}`;
-                        const homeText = activeLang === 'HE' 
-                            ? `📈 ${homeName} ${t.advancedAfterWin}${home.rank} ${t.afterWinningVs} ${awayName} (${scoreText})`
-                            : `📈 ${homeName} ${t.advancedAfterWin} ${home.rank} ${t.afterWinningVs} ${awayName} (${scoreText})`;
-                        
-                        temporaryLog.push({id: `match-h-${match.id}`,text: homeText,badge: t.matchFinishedLog,badgeColor: '#2e7d32'});
-                    } else if (match.awayScore > match.homeScore) {
-                        // Away Win Story
-                        const scoreText = `${match.awayScore} - ${match.homeScore}`;
-                        const awayText = activeLang === 'HE' 
-                            ? `📈 ${awayName} ${t.advancedAfterWin}${away.rank} ${t.afterWinningVs} ${homeName} (${scoreText})`
-                            : `📈 ${awayName} ${t.advancedAfterWin} ${away.rank} ${t.afterWinningVs} ${homeName} (${scoreText})`;
+                if (newestCompleted.length > 0 && !initializedRef.current) {
+                    lastShownCompletedIds.current.add(newestCompletedKey);
+                    initializedRef.current = true;
+                }
 
-                        temporaryLog.push({id: `match-a-${match.id}`,text: awayText,badge: t.matchFinishedLog,badgeColor: '#2e7d32'});
-                    } else {
-                        // Draw Story
-                        const scoreText = `${match.homeScore} - ${match.awayScore}`;
-                        const drawText = activeLang === 'HE'
-                            ? `🤝 ${homeName} ${t.remainedAfterDraw}${home.rank} ${t.afterDrawingVs} ${awayName} (${scoreText})`
-                            : `🤝 ${homeName} ${t.remainedAfterDraw} ${home.rank} ${t.afterDrawingVs} ${awayName} (${scoreText})`;
+                if (
+                    initializedRef.current &&
+                    newestCompleted.length > 0 &&
+                    !lastShownCompletedIds.current.has(newestCompletedKey)
+                ) {
+                    lastShownCompletedIds.current.add(newestCompletedKey);
 
-                        temporaryLog.push({id: `match-d-${match.id}`,text: drawText,badge: t.matchDrawLog,badgeColor: '#757575'});
+                    showCompletedStoriesRef.current = true;
+                    setShowCompletedStories(true);
+
+                    if (completedTimerRef.current) {
+                        clearTimeout(completedTimerRef.current);
                     }
-                });
 
-                // 2. Process Upcoming Matches
-                const upcoming = matches.filter(m => !m.isCompleted);
-                upcoming.forEach(match => {
-                    const rawHomeName = teamsMap[match.homeTeamId]?.name || `Team ${match.homeTeamId}`;
-                    const rawAwayName = teamsMap[match.awayTeamId]?.name || `Team ${match.awayTeamId}`;
+                    completedTimerRef.current = setTimeout(() => {
+                        showCompletedStoriesRef.current = false;
+                        setShowCompletedStories(false);
+                    }, 7000);
+                }
 
-                    const homeName = getTeamName(rawHomeName);
-                    const awayName = getTeamName(rawAwayName);
+                if (showCompletedStoriesRef.current && newestCompleted.length > 0) {
+                    newestCompleted.forEach(match => {
+                        const homeId = String(match.homeTeamId);
+                        const awayId = String(match.awayTeamId);
 
-                    temporaryLog.push({
-                        id: `upcoming-${match.id}`,
-                        text: `⏳ ${homeName} ${t.vs} ${awayName}`,
-                        badge: t.upcomingMatchLog,
-                        badgeColor: '#0288d1'
+                        const home = teamsMap[homeId] || { name: `Team ${match.homeTeamId}`, rank: '-' };
+                        const away = teamsMap[awayId] || { name: `Team ${match.awayTeamId}`, rank: '-' };
+
+                        const homeName = getTeamName(home.name);
+                        const awayName = getTeamName(away.name);
+
+                        if (match.homeScore > match.awayScore) {
+                            const scoreText = `${match.homeScore} - ${match.awayScore}`;
+
+                            const homeText = activeLang === 'HE'
+                                ? `📈 ${homeName} ${localTranslations.advancedAfterWin}${home.rank} ${localTranslations.afterWinningVs} ${awayName} (${scoreText})`
+                                : `📈 ${homeName} ${localTranslations.advancedAfterWin} ${home.rank} ${localTranslations.afterWinningVs} ${awayName} (${scoreText})`;
+
+                            const awayText = activeLang === 'HE'
+                                ? `📉 ${awayName} ${localTranslations.droppedAfterLoss}${away.rank} ${localTranslations.afterLosingTo} ${homeName} (${scoreText})`
+                                : `📉 ${awayName} ${localTranslations.droppedAfterLoss} ${away.rank} ${localTranslations.afterLosingTo} ${homeName} (${scoreText})`;
+
+                            temporaryLog.push({
+                                id: `match-h-win-${match.id}`,
+                                text: homeText,
+                                badge: localTranslations.won,
+                                badgeColor: '#2e7d32'
+                            });
+
+                            temporaryLog.push({
+                                id: `match-a-loss-${match.id}`,
+                                text: awayText,
+                                badge: localTranslations.lost,
+                                badgeColor: '#c62828'
+                            });
+                        } else if (match.awayScore > match.homeScore) {
+                            const scoreText = `${match.awayScore} - ${match.homeScore}`;
+
+                            const awayText = activeLang === 'HE'
+                                ? `📈 ${awayName} ${localTranslations.advancedAfterWin}${away.rank} ${localTranslations.afterWinningVs} ${homeName} (${scoreText})`
+                                : `📈 ${awayName} ${localTranslations.advancedAfterWin} ${away.rank} ${localTranslations.afterWinningVs} ${homeName} (${scoreText})`;
+
+                            const homeText = activeLang === 'HE'
+                                ? `📉 ${homeName} ${localTranslations.droppedAfterLoss}${home.rank} ${localTranslations.afterLosingTo} ${awayName} (${scoreText})`
+                                : `📉 ${homeName} ${localTranslations.droppedAfterLoss} ${home.rank} ${localTranslations.afterLosingTo} ${awayName} (${scoreText})`;
+
+                            temporaryLog.push({
+                                id: `match-a-win-${match.id}`,
+                                text: awayText,
+                                badge: localTranslations.won,
+                                badgeColor: '#2e7d32'
+                            });
+
+                            temporaryLog.push({
+                                id: `match-h-loss-${match.id}`,
+                                text: homeText,
+                                badge: localTranslations.lost,
+                                badgeColor: '#c62828'
+                            });
+                        } else {
+                            const scoreText = `${match.homeScore} - ${match.awayScore}`;
+
+                            const homeText = activeLang === 'HE'
+                                ? `🤝 ${homeName} ${localTranslations.remainedAfterDraw}${home.rank} ${localTranslations.afterDrawingVs} ${awayName} (${scoreText})`
+                                : `🤝 ${homeName} ${localTranslations.remainedAfterDraw} ${home.rank} ${localTranslations.afterDrawingVs} ${awayName} (${scoreText})`;
+
+                            const awayText = activeLang === 'HE'
+                                ? `🤝 ${awayName} ${localTranslations.remainedAfterDraw}${away.rank} ${localTranslations.afterDrawingVs} ${homeName} (${scoreText})`
+                                : `🤝 ${awayName} ${localTranslations.remainedAfterDraw} ${away.rank} ${localTranslations.afterDrawingVs} ${homeName} (${scoreText})`;
+
+                            temporaryLog.push({
+                                id: `match-h-draw-${match.id}`,
+                                text: homeText,
+                                badge: localTranslations.matchDrawLog,
+                                badgeColor: '#757575'
+                            });
+
+                            temporaryLog.push({
+                                id: `match-a-draw-${match.id}`,
+                                text: awayText,
+                                badge: localTranslations.matchDrawLog,
+                                badgeColor: '#757575'
+                            });
+                        }
                     });
-                });
+                } else {
+                    upcoming.forEach(match => {
+                        const homeId = String(match.homeTeamId);
+                        const awayId = String(match.awayTeamId);
+
+                        const rawHomeName = teamsMap[homeId]?.name || `Team ${match.homeTeamId}`;
+                        const rawAwayName = teamsMap[awayId]?.name || `Team ${match.awayTeamId}`;
+
+                        const homeName = getTeamName(rawHomeName);
+                        const awayName = getTeamName(rawAwayName);
+
+                        temporaryLog.push({
+                            id: `upcoming-${match.id}`,
+                            text: `⏳ ${homeName} ${localTranslations.vs} ${awayName}`,
+                            badge: localTranslations.upcomingMatchLog,
+                            badgeColor: '#0288d1'
+                        });
+                    });
+                }
 
                 setLogItems(temporaryLog);
             } catch (err) {
@@ -101,19 +212,26 @@ export default function MatchLog({ language }) {
         compileActivityLog();
         const intervalId = setInterval(compileActivityLog, 3000);
 
-        return () => clearInterval(intervalId);
+        return () => {
+            clearInterval(intervalId);
+
+            if (completedTimerRef.current) {
+                clearTimeout(completedTimerRef.current);
+            }
+        };
     }, [activeLang]);
 
     if (loading) return <div className={styles.loadingText}>{t.loadingActivity}</div>;
 
     return (
-        <div 
-            className={styles.logContainer} 
+        <div
+            className={styles.logContainer}
             style={{ direction: isRtl ? 'rtl' : 'ltr' }}
         >
             <h3 className={styles.logTitle}>
                 {t.activityLogTitle}
             </h3>
+
             <div className={styles.scrollArea}>
                 {logItems.length === 0 ? (
                     <p className={styles.emptyText}>{t.noActivity}</p>

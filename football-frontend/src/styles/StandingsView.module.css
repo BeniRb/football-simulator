@@ -1,38 +1,53 @@
 .container {
     padding: 20px;
+    color: var(--text);
+}
+
+.headerContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .title {
     margin: 0;
+    color: var(--text-h);
 }
 
 .table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 15px;
+    color: var(--text);
 }
 
 .headerRow {
-    border-bottom: 2px solid #ccc;
-    background-color: #f5f5f5;
+    border-bottom: 2px solid var(--border);
+    background-color: var(--code-bg);
+    color: var(--text-h);
 }
 
 .th {
     padding: 10px;
     text-align: center;
+    color: var(--text-h);
 }
 
 .tr {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
 }
 
 .td {
     padding: 10px;
     text-align: center;
+    color: var(--text);
 }
 
 .teamName {
     font-weight: bold;
+    color: var(--text-h);
 }
 
 .goalDifference {
@@ -44,45 +59,48 @@
     color: #2e7d32;
 }
 
-.loading, .error {
+.loading,
+.error {
     padding: 20px;
     text-align: center;
+    color: var(--text);
 }
 
 .error {
     color: red;
 }
-/* Append these to your existing src/styles/StandingsView.module.css file */
 
 .formContainer {
     display: flex;
     gap: 4px;
-    justify-content: flex-start; /* Aligned for better growth as rounds increase */
+    justify-content: flex-start;
     align-items: center;
     flex-wrap: wrap;
     min-width: 140px;
 }
 
 .formCircle {
-    width: 22px; 
+    width: 22px;
     height: 22px;
     border-radius: 50%;
     color: #fff;
     font-size: 0.75rem;
     font-weight: bold;
     display: flex;
-    align-items: center;    /* Vertical centering */
-    justify-content: center; /* Horizontal centering */
-    line-height: 1;         /* Crucial: prevents text from pushing the circle height */
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
     flex-shrink: 0;
 }
-.headerContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
+
+.win {
+    background-color: #2e7d32;
 }
 
-.win { background-color: #2e7d32; }
-.draw { background-color: #757575; }
-.loss { background-color: #c62828; }
+.draw {
+    background-color: #757575;
+}
+
+.loss {
+    background-color: #c62828;
+}
