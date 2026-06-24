@@ -1,6 +1,3 @@
-### 📊 Project Architecture & Interactivity Graph
-
-```mermaid
 graph TD
     %% Package Layer Groups
     subgraph Security ["🔐 Security Layer"]
@@ -96,28 +93,28 @@ graph TD
     %% Clean Response Tree
     LoginResp & ProfileResp & BettingResp & LeagueResp & MatchSimResp & OddsResp --> BasicResp
 
-    %% Click Interactions
-    click JwtConfig "./backend/src/com/football/server/security/JwtConfig.java" "Go to JwtConfig"
-    click JwtService "./backend/src/com/football/server/security/JwtService.java" "Go to JwtService"
-    click AuthService "./backend/src/com/football/server/service/AuthService.java" "Go to AuthService"
-    click TokenService "./backend/src/com/football/server/service/TokenService.java" "Go to TokenService"
-    click UserService "./backend/src/com/football/server/service/UserService.java" "Go to UserService"
-    click BettingService "./backend/src/com/football/server/service/BettingService.java" "Go to BettingService"
-    click MatchSim "./backend/src/com/football/server/service/MatchSimulationService.java" "Go to MatchSimulationService"
-    click OddsService "./backend/src/com/football/server/service/OddsService.java" "Go to OddsService"
-    click LeagueService "./backend/src/com/football/server/service/LeagueService.java" "Go to LeagueService"
-    click LeagueInit "./backend/src/com/football/server/service/LeagueInitializerService.java" "Go to LeagueInitializerService"
-    click ProfileService "./backend/src/com/football/server/service/ProfileService.java" "Go to ProfileService"
-    click Persist "./backend/src/com/football/server/service/Persist.java" "Go to Persist"
+    %% Click Interactions (Points directly to football-backend paths)
+    click JwtConfig "./football-backend/src/main/java/com/football/server/security/JwtConfig.java" "Go to JwtConfig"
+    click JwtService "./football-backend/src/main/java/com/football/server/security/JwtService.java" "Go to JwtService"
+    click AuthService "./football-backend/src/main/java/com/football/server/service/AuthService.java" "Go to AuthService"
+    click TokenService "./football-backend/src/main/java/com/football/server/service/TokenService.java" "Go to TokenService"
+    click UserService "./football-backend/src/main/java/com/football/server/service/UserService.java" "Go to UserService"
+    click BettingService "./football-backend/src/main/java/com/football/server/service/BettingService.java" "Go to BettingService"
+    click MatchSim "./football-backend/src/main/java/com/football/server/service/MatchSimulationService.java" "Go to MatchSimulationService"
+    click OddsService "./football-backend/src/main/java/com/football/server/service/OddsService.java" "Go to OddsService"
+    click LeagueService "./football-backend/src/main/java/com/football/server/service/LeagueService.java" "Go to LeagueService"
+    click LeagueInit "./football-backend/src/main/java/com/football/server/service/LeagueInitializerService.java" "Go to LeagueInitializerService"
+    click ProfileService "./football-backend/src/main/java/com/football/server/service/ProfileService.java" "Go to ProfileService"
+    click Persist "./football-backend/src/main/java/com/football/server/service/Persist.java" "Go to Persist"
     
-    click E_User "./backend/src/com/football/server/entities/User.java" "Go to User Entity"
-    click E_Bet "./backend/src/com/football/server/entities/Bet.java" "Go to Bet Entity"
-    click E_Match "./backend/src/com/football/server/entities/GameMatch.java" "Go to GameMatch Entity"
-    click E_Team "./backend/src/com/football/server/entities/Team.java" "Go to Team Entity"
-    click E_Settings "./backend/src/com/football/server/entities/LeagueSettings.java" "Go to LeagueSettings Entity"
-    click E_Token "./backend/src/com/football/server/entities/RefreshToken.java" "Go to RefreshToken Entity"
+    click E_User "./football-backend/src/main/java/com/football/server/entities/User.java" "Go to User Entity"
+    click E_Bet "./football-backend/src/main/java/com/football/server/entities/Bet.java" "Go to Bet Entity"
+    click E_Match "./football-backend/src/main/java/com/football/server/entities/GameMatch.java" "Go to GameMatch Entity"
+    click E_Team "./football-backend/src/main/java/com/football/server/entities/Team.java" "Go to Team Entity"
+    click E_Settings "./football-backend/src/main/java/com/football/server/entities/LeagueSettings.java" "Go to LeagueSettings Entity"
+    click E_Token "./football-backend/src/main/java/com/football/server/entities/RefreshToken.java" "Go to RefreshToken Entity"
 
-    click HbmXml "./backend/src/hibernate.cfg.xml" "Go to ORM Config XML"
+    click HbmXml "./football-backend/src/main/resources/hibernate.cfg.xml" "Go to ORM Config XML"
 
     %% Styling Theme
     classDef components fill:#2d3139,stroke:#5c6370,stroke-width:1px,color:#abb2bf;
