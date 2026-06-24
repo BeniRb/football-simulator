@@ -85,13 +85,27 @@ graph TD
     LeagueService --> Persist
     LeagueInit --> Persist
 
-    %% Persistence Map
-    Persist & AuthRepo & RefreshRepo --> HbmXml
-    E_User & E_Bet & E_Match & E_Team & E_Settings & E_Token --> HbmXml
+    %% Explicit Persistence Connections (Fixed Shorthand Engine Crashes)
+    Persist --> HbmXml
+    AuthRepo --> HbmXml
+    RefreshRepo --> HbmXml
+    
+    E_User --> HbmXml
+    E_Bet --> HbmXml
+    E_Match --> HbmXml
+    E_Team --> HbmXml
+    E_Settings --> HbmXml
+    E_Token --> HbmXml
+    
     CookieUtils --> Constants
 
-    %% Clean Response Tree
-    LoginResp & ProfileResp & BettingResp & LeagueResp & MatchSimResp & OddsResp --> BasicResp
+    %% Explicit Response Inheritance Connections
+    LoginResp --> BasicResp
+    ProfileResp --> BasicResp
+    BettingResp --> BasicResp
+    LeagueResp --> BasicResp
+    MatchSimResp --> BasicResp
+    OddsResp --> BasicResp
 
     %% Click Interactions (Points directly to football-backend paths)
     click JwtConfig "./football-backend/src/main/java/com/football/server/security/JwtConfig.java" "Go to JwtConfig"
