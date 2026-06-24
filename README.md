@@ -1,89 +1,79 @@
-# ⚽ foot-ball simulator
+### 📊 Project Architecture & Interactivity Graph
 
-Automated full-stack football betting platform and match simulation engine built with a Java Spring Boot backend and a dynamic React frontend.
-
----
-
-## 📂 Project Repository Structure
-
-This project is organized as a monorepo to keep both the frontend client and the backend server code synchronized inside a single repository:
-
-```text
-foot-ball simulator/
-│
-├── football-backend/      <-- Spring Boot Application Core
-│   ├── src/main/java/     <-- Java Package Layer Blueprints
-│   ├── src/main/resources/<-- Application Properties & Hibernate XML
-│   └── pom.xml            <-- Maven Dependency Management
-│
-├── football-frontend/     <-- React User Interface
-│   ├── src/               <-- UI Components, Hooks, & Styling
-│   └── package.json       <-- Node Dependency Scripts
-│
-└── README.md              <-- System Overview Index
-
-📊 Project Architecture & Interactivity Graph
-
-The following diagram maps out how the backend packages interact. This graph is interactive: hovering over or clicking on any component node will jump you directly to its source file in the repository.
-Code snippet
-
+```mermaid
 graph TD
-    %% --- LAYER DIRECTORIES ---
-    Sec_Title[🔐 SECURITY LAYER] === JwtConfig[JwtConfig.java]
-    JwtConfig --> JwtService[JwtService.java]
+    %% Package Layer Groups
+    subgraph Security ["🔐 Security Layer"]
+        JwtConfig[JwtConfig.java]
+        JwtService[JwtService.java]
+    end
 
-    Auth_Title[⚙️ AUTH SERVICES] === AuthService[AuthService.java]
-    AuthService --> GenerateHash[GenerateHash.java]
-    AuthService --> UserService[UserService.java]
-    AuthService --> TokenService[TokenService.java]
+    subgraph Auth ["⚙️ Core Authentication Services"]
+        AuthService[AuthService.java]
+        UserService[UserService.java]
+        TokenService[TokenService.java]
+    end
 
-    Sport_Title[⚽ SPORTSBOOK & SIMULATION] === BettingService[BettingService.java]
-    MatchSim[MatchSimulationService.java]
-    OddsService[OddsService.java]
-    LeagueService[LeagueService.java]
-    LeagueInit[LeagueInitializerService.java]
+    subgraph Sportsbook ["⚽ Sportsbook & Simulation"]
+        BettingService[BettingService.java]
+        MatchSim[MatchSimulationService.java]
+        OddsService[OddsService.java]
+        LeagueService[LeagueService.java]
+        LeagueInit[LeagueInitializerService.java]
+    end
 
-    Store_Title[🗄️ DATABASE ENTITIES] === E_User[User.java]
-    E_Bet[Bet.java]
-    E_Match[GameMatch.java]
-    E_Team[Team.java]
-    E_Settings[LeagueSettings.java]
-    E_Token[RefreshToken.java]
+    subgraph Storage ["🗄️ Database Entities & ORM"]
+        E_User(User)
+        E_Bet(Bet)
+        E_Match(GameMatch)
+        E_Team(Team)
+        E_Settings(LeagueSettings)
+        E_Token(RefreshToken)
+    end
 
-    Infra_Title[💾 PERSISTENCE & INFRASTRUCTURE] === Persist[Persist.java]
-    AuthRepo[AuthRepository]
-    RefreshRepo[RefreshTokenRepository]
-    HbmXml[hibernate.cfg.xml]
-    ProfileService[ProfileService.java]
-    CookieUtils[CookieUtils.java]
-    Constants[Constants.java]
+    subgraph Infrastructure ["💾 Persistence & Utilities"]
+        Persist[Persist.java]
+        AuthRepo[AuthRepository]
+        RefreshRepo[RefreshTokenRepository]
+        HbmXml[hibernate.cfg.xml]
+        ProfileService[ProfileService.java]
+        CookieUtils[CookieUtils.java]
+        Constants[Constants.java]
+        Errors[Errors.java]
+        GenerateHash[GenerateHash.java]
+    end
 
-    Dto_Title[📦 RESPONSE DTOS] === BasicResp[BasicResponse.java]
-    LoginResp[LoginResponse.java]
-    ProfileResp[ProfileResponse.java]
-    BettingResp[BettingResponse.java]
-    LeagueResp[LeagueResponse.java]
-    MatchSimResp[MatchSimulationResponse.java]
-    OddsResp[OddsResponse.java]
+    subgraph DTOs ["📦 Response DTO Hierarchy"]
+        BasicResp[BasicResponse.java]
+        LoginResp[LoginResponse.java]
+        ProfileResp[ProfileResponse.java]
+        BettingResp[BettingResponse.java]
+        LeagueResp[LeagueResponse.java]
+        MatchSimResp[MatchSimulationResponse.java]
+        OddsResp[OddsResponse.java]
+    end
 
-    %% --- SYSTEM FLOWS ---
-    JwtService -.-> TokenService
+    %% Structural Interactions & Dependencies
+    JwtConfig --> JwtService
+    JwtService --> Constants
+    AuthService --> GenerateHash
+    AuthService --> UserService
+    AuthService --> TokenService
     TokenService --> RefreshRepo
     TokenService --> AuthRepo
+    TokenService --> JwtService
     TokenService --> E_Token
     TokenService --> E_User
     UserService --> AuthRepo
-
-    ProfileService --> AuthRepo
-    ProfileService --> BettingService
-    ProfileService --> E_User
-    ProfileService --> E_Bet
+    UserService --> E_User
 
     BettingService --> Persist
+    BettingService --> JwtService
     BettingService --> E_User
     BettingService --> E_Bet
     BettingService --> E_Match
-    
+    BettingService --> E_Settings
+
     MatchSim --> Persist
     MatchSim --> BettingService
     MatchSim --> OddsService
@@ -96,54 +86,51 @@ graph TD
     OddsService --> E_Match
 
     LeagueService --> Persist
+    LeagueService --> E_Match
+    LeagueService --> E_Team
+    LeagueService --> E_Settings
+
     LeagueInit --> Persist
+    LeagueInit --> E_Team
+    LeagueInit --> E_Match
+    LeagueInit --> E_Settings
 
-    Persist --> HbmXml
-    AuthRepo --> HbmXml
-    RefreshRepo --> HbmXml
-    
-    E_User --> HbmXml
-    E_Bet --> HbmXml
-    E_Match --> HbmXml
-    E_Team --> HbmXml
-    E_Settings --> HbmXml
-    E_Token --> HbmXml
-    
+    Persist & AuthRepo & RefreshRepo --> HbmXml
+    E_User & E_Bet & E_Match & E_Team & E_Settings & E_Token --> HbmXml
+
+    ProfileService --> AuthRepo
+    ProfileService --> BettingService
+    ProfileService --> E_User
+    ProfileService --> E_Bet
+
     CookieUtils --> Constants
+    Errors --> AuthService & BettingService & LeagueService & MatchSim & OddsService
 
-    LoginResp --> BasicResp
-    ProfileResp --> BasicResp
-    BettingResp --> BasicResp
-    LeagueResp --> BasicResp
-    MatchSimResp --> BasicResp
-    OddsResp --> BasicResp
+    LoginResp & ProfileResp & BettingResp & LeagueResp & MatchSimResp & OddsResp --> BasicResp
 
-    %% --- INTERACTIVE ROUTING LINKS ---
-    click JwtConfig "./football-backend/src/main/java/com/football/server/security/JwtConfig.java" "Go to JwtConfig"
-    click JwtService "./football-backend/src/main/java/com/football/server/security/JwtService.java" "Go to JwtService"
-    click AuthService "./football-backend/src/main/java/com/football/server/service/AuthService.java" "Go to AuthService"
-    click TokenService "./football-backend/src/main/java/com/football/server/service/TokenService.java" "Go to TokenService"
-    click UserService "./football-backend/src/main/java/com/football/server/service/UserService.java" "Go to UserService"
-    click BettingService "./football-backend/src/main/java/com/football/server/service/BettingService.java" "Go to BettingService"
-    click MatchSim "./football-backend/src/main/java/com/football/server/service/MatchSimulationService.java" "Go to MatchSimulationService"
-    click OddsService "./football-backend/src/main/java/com/football/server/service/OddsService.java" "Go to OddsService"
-    click LeagueService "./football-backend/src/main/java/com/football/server/service/LeagueService.java" "Go to LeagueService"
-    click LeagueInit "./football-backend/src/main/java/com/football/server/service/LeagueInitializerService.java" "Go to LeagueInitializerService"
-    click ProfileService "./football-backend/src/main/java/com/football/server/service/ProfileService.java" "Go to ProfileService"
-    click Persist "./football-backend/src/main/java/com/football/server/service/Persist.java" "Go to Persist"
+    %% Click Interactions (Points to files inside your new /backend/ folder structure)
+    click JwtConfig "./backend/src/com/football/server/security/JwtConfig.java" "Go to JwtConfig"
+    click JwtService "./backend/src/com/football/server/security/JwtService.java" "Go to JwtService"
+    click AuthService "./backend/src/com/football/server/service/AuthService.java" "Go to AuthService"
+    click TokenService "./backend/src/com/football/server/service/TokenService.java" "Go to TokenService"
+    click UserService "./backend/src/com/football/server/service/UserService.java" "Go to UserService"
+    click BettingService "./backend/src/com/football/server/service/BettingService.java" "Go to BettingService"
+    click MatchSim "./backend/src/com/football/server/service/MatchSimulationService.java" "Go to MatchSimulationService"
+    click OddsService "./backend/src/com/football/server/service/OddsService.java" "Go to OddsService"
+    click LeagueService "./backend/src/com/football/server/service/LeagueService.java" "Go to LeagueService"
+    click LeagueInit "./backend/src/com/football/server/service/LeagueInitializerService.java" "Go to LeagueInitializerService"
+    click ProfileService "./backend/src/com/football/server/service/ProfileService.java" "Go to ProfileService"
+    click Persist "./backend/src/com/football/server/service/Persist.java" "Go to Persist"
     
-    click E_User "./football-backend/src/main/java/com/football/server/entities/User.java" "Go to User Entity"
-    click E_Bet "./football-backend/src/main/java/com/football/server/entities/Bet.java" "Go to Bet Entity"
-    click E_Match "./football-backend/src/main/java/com/football/server/entities/GameMatch.java" "Go to GameMatch Entity"
-    click E_Team "./football-backend/src/main/java/com/football/server/entities/Team.java" "Go to Team Entity"
-    click E_Settings "./football-backend/src/main/java/com/football/server/entities/LeagueSettings.java" "Go to LeagueSettings Entity"
-    click E_Token "./football-backend/src/main/java/com/football/server/entities/RefreshToken.java" "Go to RefreshToken Entity"
+    click E_User "./backend/src/com/football/server/entities/User.java" "Go to User Entity"
+    click E_Bet "./backend/src/com/football/server/entities/Bet.java" "Go to Bet Entity"
+    click E_Match "./backend/src/com/football/server/entities/GameMatch.java" "Go to GameMatch Entity"
+    click E_Team "./backend/src/com/football/server/entities/Team.java" "Go to Team Entity"
+    click E_Settings "./backend/src/com/football/server/entities/LeagueSettings.java" "Go to LeagueSettings Entity"
+    click E_Token "./backend/src/com/football/server/entities/RefreshToken.java" "Go to RefreshToken Entity"
 
-    click HbmXml "./football-backend/src/main/resources/hibernate.cfg.xml" "Go to ORM Config XML"
+    click HbmXml "./backend/src/hibernate.cfg.xml" "Go to ORM Config XML"
 
-    %% --- VISUAL COMPONENT STYLES ---
-    classDef files fill:#2d3139,stroke:#5c6370,stroke-width:1px,color:#abb2bf;
-    classDef titles fill:#1e222a,stroke:#abb2bf,stroke-width:2px,color:#ffffff,font-weight:bold;
-    
-    class JwtConfig,JwtService,AuthService,UserService,TokenService,BettingService,MatchSim,OddsService,LeagueService,LeagueInit,ProfileService,Persist,E_User,E_Bet,E_Match,E_Team,E_Settings,E_Token,HbmXml,AuthRepo,RefreshRepo,Constants,CookieUtils,GenerateHash,BasicResp,LoginResp,ProfileResp,BettingResp,LeagueResp,MatchSimResp,OddsResp files;
-    class Sec_Title,Auth_Title,Sport_Title,Store_Title,Infra_Title,Dto_Title titles;
+    %% Styling Theme
+    classDef components fill:#2d3139,stroke:#5c6370,stroke-width:1px,color:#abb2bf;
+    class JwtConfig,JwtService,AuthService,UserService,TokenService,BettingService,MatchSim,OddsService,LeagueService,LeagueInit,ProfileService,Persist,E_User,E_Bet,E_Match,E_Team,E_Settings,E_Token,HbmXml,AuthRepo,RefreshRepo,Constants,CookieUtils,Errors,GenerateHash,BasicResp,LoginResp,ProfileResp,BettingResp,LeagueResp,MatchSimResp,OddsResp components;
